@@ -1,7 +1,7 @@
 #include "exercises.h"
 #include "soil/SOIL.h"
 
-int main5(int argc, char **argv)
+int main6(int argc, char **argv)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -61,14 +61,14 @@ int main5(int argc, char **argv)
 
     // Create and compile the vertex shader
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    char const *vs = readcontent("vertex5.vsh");
+    char const *vs = readcontent("vertex6.vsh");
     printf("%s\n", vs);
     glShaderSource(vertexShader, 1, &vs, NULL);
     glCompileShader(vertexShader);
 
     // Create and compile the fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    char const *fs = readcontent("fragment5.fsh");
+    char const *fs = readcontent("fragment6.fsh");
     printf("%s\n", fs);
     glShaderSource(fragmentShader, 1, &fs, NULL);
     glCompileShader(fragmentShader);
@@ -104,32 +104,43 @@ int main5(int argc, char **argv)
 
 
 
-    GLuint textures[2];
-    glGenTextures(2, textures);
+    /*GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);*/
 
     int w, h;
-    unsigned char *image= NULL;
+    unsigned char *image=
+        SOIL_load_image("sample.png", &w, &h, 0, SOIL_LOAD_RGB);
+        //SOIL_load_image("husky.jpg", &w, &h, 0, SOIL_LOAD_RGB);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    image = SOIL_load_image("sample.png", &w, &h, 0, SOIL_LOAD_RGB);
+    //printf("%s\n", image);
+
+    printf("Width %d Height %d\n", w, h);
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     SOIL_free_image_data(image);
-    glUniform1i(glGetUniformLocation(shaderProgram, "texKitten"), 0);
+
+
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    image = SOIL_load_image("husky.jpg", &w, &h, 0, SOIL_LOAD_RGB);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    SOIL_free_image_data(image);
-    glUniform1i(glGetUniformLocation(shaderProgram, "texPuppy"), 1);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     printf("glTexParameteri Error %d\n", glGetError());
 
-    GLint uniformTime = glGetUniformLocation(shaderProgram, "time");
+
+    //float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+
+
+    //glGenerateMipmap(GL_TEXTURE_2D);
+
+
+
     //
     //= OPENGL end
     //
@@ -143,8 +154,6 @@ int main5(int argc, char **argv)
             if (windowEvent.type == SDL_QUIT) break;
         }
 
-        GLfloat t = (GLfloat)clock() / (GLfloat)CLOCKS_PER_SEC;
-        glUniform1f(uniformTime, t);
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -155,7 +164,7 @@ int main5(int argc, char **argv)
         SDL_GL_SwapWindow(window);
     }
 
-    glDeleteTextures(2, textures);
+    //glDeleteTextures(1, &tex);
 
     glDeleteProgram(shaderProgram);
     glDeleteShader(fragmentShader);

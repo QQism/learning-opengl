@@ -12,3 +12,7 @@ int main3(int argc, char **argv);
 int main4(int argc, char **argv);
 // mix textures
 int main5(int argc, char **argv);
+// reflection
+int main6(int argc, char **argv);
+// distortion
+int main7(int argc, char **argv);
