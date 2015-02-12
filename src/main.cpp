@@ -1,6 +1,6 @@
 #include "exercises.h"
 
-#define exercise 7
+#define exercise 9
 
 int main(int argc, char **argv)
 {
@@ -27,6 +27,12 @@ int main(int argc, char **argv)
             break;
         case 7:
             code = main7(argc, argv);
+            break;
+        case 8:
+            code = main8(argc, argv);
+            break;
+        case 9:
+            code = main9(argc, argv);
             break;
     }
     return code;

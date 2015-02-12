@@ -16,3 +16,8 @@ int main5(int argc, char **argv);
 int main6(int argc, char **argv);
 // distortion
 int main7(int argc, char **argv);
+// Model Transformation (rotating)
+int main8(int argc, char **argv);
+// View Transformation (Field of View)
+int main9(int argc, char **argv);
+
