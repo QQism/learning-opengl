@@ -17,15 +17,16 @@ MESSAGE(ENV{LIBRARY_PATH})
 set(GAME_SRC
     src/main.cpp
     src/exercises.h
-    src/exercise1.cpp
-    src/exercise2.cpp
-    src/exercise3.cpp
-    src/exercise4.cpp
-    src/exercise5.cpp
-    src/exercise6.cpp
-    src/exercise7.cpp
-    src/exercise8.cpp
-    src/exercise9.cpp
+    src/exercise01.cpp
+    src/exercise02.cpp
+    src/exercise03.cpp
+    src/exercise04.cpp
+    src/exercise05.cpp
+    src/exercise06.cpp
+    src/exercise07.cpp
+    src/exercise08.cpp
+    src/exercise09.cpp
+    src/exercise10.cpp
 
     src/helper.h
     src/helper.cpp

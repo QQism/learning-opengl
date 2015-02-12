@@ -1,7 +1,7 @@
 #include "exercises.h"
 #include "soil/SOIL.h"
 
-int main6(int argc, char **argv)
+int main4(int argc, char **argv)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -61,14 +61,14 @@ int main6(int argc, char **argv)
 
     // Create and compile the vertex shader
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    char const *vs = readcontent("vertex6.vsh");
+    char const *vs = readcontent("vertex04.vsh");
     printf("%s\n", vs);
     glShaderSource(vertexShader, 1, &vs, NULL);
     glCompileShader(vertexShader);
 
     // Create and compile the fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    char const *fs = readcontent("fragment6.fsh");
+    char const *fs = readcontent("fragment04.fsh");
     printf("%s\n", fs);
     glShaderSource(fragmentShader, 1, &fs, NULL);
     glCompileShader(fragmentShader);

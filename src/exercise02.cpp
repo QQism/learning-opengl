@@ -1,6 +1,6 @@
 #include "exercises.h"
 
-int main1(int argc, char **argv)
+int main2(int argc, char **argv)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -26,26 +26,44 @@ int main1(int argc, char **argv)
     GLuint vbo;
     glGenBuffers(1, &vbo);
 
+    /*
     GLfloat vertices[] = {
-        0.0f,  0.5f, // Vertex 1 (X, Y)
-        0.5f, -0.5f, // Vertex 2 (X, Y)
-        -0.5f, -0.5f // Vertex 3 (X, Y)
+        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-Left
+         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right,
+        -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, // Bottom-left,
+        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left,
+    };*/
+
+    float vertices[] = {
+         0.0f,  0.5f, 1.0f, 0.0f, 0.0f, // Vertex 1: Red
+         0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 2: Green
+        -0.5f, -0.5f, 1.0f, 0.0f, 1.0f, // Vertex 3: Blue
+    };
+
+    // gray scale
+    float gray_vertices[] = {
+         0.0f,  0.5f, 0.0f, 0.0f, 0.0f, // Vertex 1: Red
+         0.5f, -0.5f, 0.5f, 0.5f, 0.5f, // Vertex 2: Green
+        -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, // Vertex 3: Blue
     };
 
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(gray_vertices), gray_vertices, GL_STATIC_DRAW);
 
     // Create and compile the vertex shader
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    char const *vs = readcontent("vertex.vsh");
+    char const *vs = readcontent("vertex02.vsh");
     printf("%s\n", vs);
     glShaderSource(vertexShader, 1, &vs, NULL);
     glCompileShader(vertexShader);
 
     // Create and compile the fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    char const *fs = readcontent("fragment.fsh");
+    char const *fs = readcontent("fragment02.fsh");
     printf("%s\n", fs);
     glShaderSource(fragmentShader, 1, &fs, NULL);
     glCompileShader(fragmentShader);
@@ -60,10 +78,17 @@ int main1(int argc, char **argv)
     glUseProgram(shaderProgram);
 
     printf("glUseProgram Error %d\n", glGetError());
+
     // Specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE,
+            5*sizeof(GLfloat), 0);
+
+    GLint colorAttrib = glGetAttribLocation(shaderProgram, "color");
+    glEnableVertexAttribArray(colorAttrib);
+    glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE,
+            5*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)));
 
     printf("Get Attribute Location Error %d\n", glGetError());
 
@@ -71,7 +96,6 @@ int main1(int argc, char **argv)
     //= OPENGL end
     //
 
-    GLint uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
     printf("Clocks %ld - CLOCKS_PER_SEC %d\n", clock(), CLOCKS_PER_SEC);
 
     while(true)
@@ -80,12 +104,6 @@ int main1(int argc, char **argv)
         {
             if (windowEvent.type == SDL_QUIT) break;
         }
-
-        GLfloat t = (GLfloat)clock() / (GLfloat)CLOCKS_PER_SEC;
-        //GLfloat t = SDL_GetTicks() ;/// (GLfloat)CLOCKS_PER_SEC;
-        GLfloat red = (sin(t * 100.0f) + 1.0f)/2.0f;
-        //printf("%f", red);
-        glUniform3f(uniColor, red, 0.0f, 0.0f);
 
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
