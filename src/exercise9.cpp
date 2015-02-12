@@ -113,17 +113,8 @@ int main9(int argc, char **argv)
 
 
     GLint uniModel = glGetUniformLocation(shaderProgram, "model");
-    glm::mat4 view = glm::lookAt(
-            glm::vec3(1.2f, 1.2f, 1.2f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 1.0f));
-
     GLint uniView = glGetUniformLocation(shaderProgram, "view");
-    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
-    glm::mat4 proj = glm::perspective(45.0f, 800.0f/600.0f, 1.0f, 10.0f);
     GLint uniProj = glGetUniformLocation(shaderProgram, "proj");
-    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
-
     //
     //= OPENGL end
     //
@@ -141,15 +132,29 @@ int main9(int argc, char **argv)
 
         GLfloat t = (GLfloat)clock() / (GLfloat)CLOCKS_PER_SEC;
         glUniform1f(uniformTime, t);
+
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glm::mat4 trans;
-        trans = glm::rotate(trans, (float)((float)M_PI * t * 100), glm::vec3(0.0f, 0.0f, 1.0f));
+        // Model transformation
+        glm::mat4 modelTransformation;
+        modelTransformation = glm::rotate(modelTransformation, (float)((float)M_PI * t * 100), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate around Z-axis
+        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelTransformation));
 
-        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(trans));
+        // View transformation
+        glm::mat4 viewTransformation = glm::lookAt(
+                glm::vec3(1.2f, 1.2f, 1.2f),
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                glm::vec3(0.0f, 0.0f, 1.0f));
+        glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(viewTransformation));
 
+        // Projection transformation
+        glm::mat4 projectionTransformation = glm::perspective(45.0f, 800.0f/600.0f, 1.0f, 10.0f);
+        glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projectionTransformation));
+
+
+        // Draw things on framebuffer
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // Swap buffers
