@@ -20,4 +20,6 @@ int main7(int argc, char **argv);
 int main8(int argc, char **argv);
 // View Transformation (Field of View)
 int main9(int argc, char **argv);
+// View Transformation (Field of View + Scaling)
+int main10(int argc, char **argv);
 
