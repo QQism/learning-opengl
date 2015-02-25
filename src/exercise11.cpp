@@ -4,7 +4,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-int main10(int argc, char **argv)
+extern glm::vec3 rotationWithKeyCode(SDL_Keycode code);
+
+int main11(int argc, char **argv)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -119,19 +121,39 @@ int main10(int argc, char **argv)
     //= OPENGL end
     //
 
-    printf("Clocks %ld - CLOCKS_PER_SEC %d\n", clock(), CLOCKS_PER_SEC);
 
     GLint uniformTime = glGetUniformLocation(shaderProgram, "time");
 
-    while(true)
+
+
+    float g_rotationVelocity = 0;
+    glm::vec3 g_rotationVec3 = glm::vec3(0, 0, 0);
+    glm::mat4 g_modelTransformation;
+
+
+    SDL_bool done = SDL_FALSE;
+    while(!done)
     {
         if (SDL_PollEvent(&windowEvent))
         {
-            if (windowEvent.type == SDL_QUIT) break;
+            switch(windowEvent.type)
+            {
+                case SDL_QUIT:
+                    {
+                        done = SDL_TRUE;
+                        break;
+                    }
+                case SDL_KEYDOWN:
+                    {
+                        SDL_Keycode keyCode = windowEvent.key.keysym.sym;
+                        g_rotationVec3 = rotationWithKeyCode(keyCode);
+                        g_rotationVelocity = 10;
+                        break;
+                    }
+            }
         }
 
-        //GLfloat t = (GLfloat)clock() / (GLfloat)CLOCKS_PER_SEC;
-        GLfloat t = SDL_GetTicks();//(GLfloat)clock() / (GLfloat)CLOCKS_PER_SEC;
+        GLfloat t = SDL_GetTicks();
         glUniform1f(uniformTime, t);
 
         // Clear the screen to black
@@ -139,13 +161,14 @@ int main10(int argc, char **argv)
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Model transformation
-        glm::mat4 modelTransformation;
-        modelTransformation = glm::rotate(modelTransformation, (float)((float)t/200.0), glm::vec3(0.0f, 0.0f, 1.0f)); // rotate around Z-axis
+        //glm::mat4 modelTransformation;
+        if (g_rotationVelocity > 0)
+        {
+            g_modelTransformation = glm::rotate(g_modelTransformation, (float)((float)g_rotationVelocity * 2 * M_PI/180.0), g_rotationVec3);
+            g_rotationVelocity -= 0.5;
+        }
+        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(g_modelTransformation));
 
-        float scale = (sin(t * 100)) + 1;
-        glm::mat4 scaledModelTransformation = glm::scale(modelTransformation, glm::vec3(scale, scale, scale));
-
-        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(scaledModelTransformation));
 
 
         // View transformation
@@ -181,4 +204,33 @@ int main10(int argc, char **argv)
     SDL_GL_DeleteContext(context);
     SDL_Quit();
     return 0;
+}
+
+glm::vec3 rotationWithKeyCode(SDL_Keycode code)
+{
+    glm::vec3 rotation = glm::vec3(0, 0, 0);
+    switch(code)
+    {
+        case SDLK_z:
+            {
+                rotation.z = 1.0;
+                break;
+            }
+        case SDLK_x:
+            {
+                rotation.x = 1.0f;
+                break;
+            }
+        case SDLK_y:
+            {
+                rotation.y = 1.0f;
+                break;
+            }
+        default:
+            {
+                break;
+            }
+    }
+
+    return rotation;
 }

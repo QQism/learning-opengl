@@ -27,6 +27,7 @@ set(GAME_SRC
     src/exercise08.cpp
     src/exercise09.cpp
     src/exercise10.cpp
+    src/exercise11.cpp
 
     src/helper.h
     src/helper.cpp

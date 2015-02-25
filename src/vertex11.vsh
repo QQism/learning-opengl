@@ -17,6 +17,5 @@ void main()
 {
     Color = color;
     Texcoord = texcoord;
-    //vec2 newPosition = position * (sin(time * 100) + 1);
     gl_Position = proj * view * model * vec4(position, 0.0, 1.0);
 }
